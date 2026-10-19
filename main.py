@@ -1,12 +1,7 @@
-import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from pydantic import BaseModel
-from google import genai
 
 app = FastAPI(title="ZETA AI")
-
-api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key) if api_key else None
 
 
 class ChatRequest(BaseModel):
@@ -29,27 +24,14 @@ def health():
 
 @app.post("/chat")
 def chat(request: ChatRequest):
-    if not client:
-        raise HTTPException(
-            status_code=503,
-            detail="Gemini API key is not configured."
+    message = request.message.strip()
+
+    if not message:
+        return {"reply": "Please tell me something!"}
+
+    return {
+        "reply": (
+            f"Hello! I'm ZETA. You said: {message}. "
+            "My advanced AI brain will be connected soon!"
         )
-
-    try:
-        response = client.models.generate_content(
-            model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
-            contents=(
-                "You are ZETA, a friendly AI assistant with a warm, "
-                "feminine conversational style. You help with questions, "
-                "learning, and programming. You are an AI, not a human.\n\n"
-                + request.message
-            )
-        )
-
-        return {"reply": response.text or "Please try again."}
-
-    except Exception:
-        raise HTTPException(
-            status_code=502,
-            detail="Gemini request failed. Check the service configuration."
-)
+    }
