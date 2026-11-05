@@ -1,0 +1,13 @@
+workflows:
+  nativescript-android-wizard:
+    name: Zeta AI Android Build
+    max_build_duration: 15
+    environment:
+      node: latest
+    scripts:
+      - name: Install NativeScript CLI
+        script: npm install -g nativescript
+      - name: Build Android APK
+        script: ns build android --release --copy-to ./app-release.apk
+    artifacts:
+      - ./app-release.apk
