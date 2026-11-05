@@ -1,0 +1,11 @@
+{
+  "id": "org.nativescript.zetaai",
+  "main": "app/app.js",
+  "version": "1.0.0",
+  "dependencies": {
+    "@nativescript/core": "~8.5.0"
+  },
+  "devDependencies": {
+    "@nativescript/android": "~8.5.0"
+  }
+}
