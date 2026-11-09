@@ -12,7 +12,7 @@ import io
 
 # --- ZETA'S API CREDENTIALS ---
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "YOUR_GEMINI_KEY_HERE")
-HF_TOKEN = "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" # Your Hugging Face Key
+HF_TOKEN = os.environ.get("HF_TOKEN", "YOUR_FALLBACK_HERE")
 
 class ZetaInterface(BoxLayout):
     def __init__(self, **kwargs):
