@@ -1,35 +1,40 @@
 name: Build Zeta APK
-on: [push, workflow_dispatch]
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-python-version: '3.10'
 
-      - name: Install Buildozer Dependencies
+      - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libsqlite3-dev build-essential libffi-dev git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libmstream0d curl
-          pip3 install --user --upgrade buildozer cython virtualenv
+          sudo apt-get install -y ccache git libffi-dev libssl-dev autoconf automake libtool pkg-config zlib1g-dev libgstreamer1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good openjdk-17-jdk unzip zip
 
-      - name: Create buildozer.spec
+      - name: Install Buildozer and Cython
         run: |
-          ~/.local/bin/buildozer init
-          sed -i 's/^title = .*/title = Zeta AI/' buildozer.spec
-          sed -i 's/^package.name = .*/package.name = zetaai/' buildozer.spec
-          sed -i 's/^requirements = .*/requirements = python3,kivy,pyjnius/' buildozer.spec
-          sed -i 's/#android.permissions = .*/android.permissions = INTERNET, ACCESS_FINE_LOCATION/' buildozer.spec
+          pip install --upgrade pip
+          pip install buildozer cython virtualenv
 
-      - name: Package with Buildozer
+      - name: Build APK with Buildozer
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          yes | ~/.local/bin/buildozer android debug
-          
+          buildozer android debug
+
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
