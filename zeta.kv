@@ -1,0 +1,54 @@
+<ZetaInterface>:
+    canvas.before:
+        # Deep space dark holographic background gradient
+        Color:
+            rgba: 0.02, 0.05, 0.1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            
+        # Subtle Jarvis tech-circle grid border accent
+        Color:
+            rgba: 0.0, 0.6, 0.9, 0.15
+        Line:
+            width: 2
+            rectangle: (self.x + 10, self.y + 10, self.width - 20, self.height - 20)
+
+    # Main Console Output Label
+    Label:
+        id: output_label
+        text: root.output_label.text
+        font_size: '18sp'
+        color: 0.0, 0.85, 1.0, 1  # Glowing cyan text
+        text_size: self.width - 40, None
+        halign: 'center'
+        valign: 'middle'
+        size_hint_y: 0.6
+        bold: True
+
+    # User Terminal input Box
+    TextInput:
+        id: input_field
+        text: root.input_field.text
+        hint_text: "Awaiting your command, Sir..."
+        hint_text_color: 0.0, 0.4, 0.6, 1
+        foreground_color: 0.0, 0.9, 1.0, 1
+        background_color: 0.05, 0.1, 0.2, 0.8
+        cursor_color: 0.0, 0.8, 1.0, 1
+        multiline: False
+        size_hint_y: 0.12
+        padding_y: [self.height / 2.0 - (self.line_height / 2.0), 0]
+        padding_x: 20
+
+    # Execute Button Matrix
+    Button:
+        id: submit_btn
+        text: "TRANSMIT DIRECTIVE"
+        font_size: '16sp'
+        bold: True
+        size_hint_y: 0.12
+        color: 1, 1, 1, 1
+        background_normal: ''
+        background_color: 0.0, 0.5, 0.8, 0.9  # Clean Stark blue highlight
+        border: (16, 16, 16, 16)
+        on_press: root.process_command(self)
